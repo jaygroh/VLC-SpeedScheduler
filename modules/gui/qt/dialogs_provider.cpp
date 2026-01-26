@@ -57,6 +57,7 @@
 #include "dialogs/external.hpp"
 #include "dialogs/epg.hpp"
 #include "dialogs/errors.hpp"
+#include "dialogs/customspeed.hpp"
 
 #include <QEvent>
 #include <QApplication>
@@ -104,6 +105,7 @@ DialogsProvider::~DialogsProvider()
 #endif
     PluginDialog::killInstance();
     EpgDialog::killInstance();
+    CustomSpeedDialog::killInstance();
 
     delete menusMapper;
     delete menusUpdateMapper;
@@ -352,6 +354,11 @@ void DialogsProvider::pluginDialog()
 void DialogsProvider::epgDialog()
 {
     EpgDialog::getInstance( p_intf )->toggleVisible();
+}
+
+void DialogsProvider::customSpeedDialog()
+{
+    CustomSpeedDialog::getInstance( p_intf )->toggleVisible();
 }
 
 void DialogsProvider::setPopupMenu()

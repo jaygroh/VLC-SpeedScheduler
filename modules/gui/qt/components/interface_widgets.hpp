@@ -275,6 +275,7 @@ private slots:
     void updateRate( int );
     void updateSpinBoxRate( double );
     void resetRate();
+    void openCustomSpeedDialog();
 };
 
 class CoverArtLabel : public QLabel

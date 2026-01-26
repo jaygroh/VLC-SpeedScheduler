@@ -908,6 +908,11 @@ void VLCMenuBar::PopupMenuControlEntries( QMenu *menu, intf_thread_t *p_intf,
         action->setData( ACTION_STATIC );
     }
 
+    rateMenu->addSeparator();
+    action = rateMenu->addAction( qtr( "&Custom Speed..." ), THEDP,
+                              SLOT( customSpeedDialog() ) );
+    action->setData( ACTION_STATIC );
+
     action = menu->addMenu( rateMenu );
     action->setData( ACTION_STATIC );
 

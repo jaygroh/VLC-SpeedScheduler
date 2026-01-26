@@ -31,6 +31,7 @@
 #include "qt.hpp"
 #include "components/interface_widgets.hpp"
 #include "dialogs_provider.hpp"
+#include "dialogs/customspeed.hpp"
 #include "util/customwidgets.hpp"               // qtEventToVLCKey, QVLCStackedWidget
 
 #include "menus.hpp"             /* Popup menu on bgWidget */
@@ -732,6 +733,14 @@ SpeedControlWidget::SpeedControlWidget( intf_thread_t *_p_i, QWidget *_parent )
 
     CONNECT( normalSpeedButton, clicked(), this, resetRate() );
 
+    QToolButton *customSpeedButton = new QToolButton( this );
+    customSpeedButton->setMaximumSize( QSize( 50, 16 ) );
+    customSpeedButton->setAutoRaise( true );
+    customSpeedButton->setText( qtr( "Custom" ) );
+    customSpeedButton->setToolTip( qtr( "Set custom playback speed based on finish time" ) );
+
+    CONNECT( customSpeedButton, clicked(), this, openCustomSpeedDialog() );
+
     QToolButton *slowerButton = new QToolButton( this );
     slowerButton->setMaximumSize( QSize( 26, 16 ) );
     slowerButton->setAutoRaise( true );
@@ -756,10 +765,14 @@ SpeedControlWidget::SpeedControlWidget( intf_thread_t *_p_i, QWidget *_parent )
     CONNECT( spinBox, valueChanged( double ), this, updateSpinBoxRate( double ) ); */
 
     QGridLayout* speedControlLayout = new QGridLayout( this );
-    speedControlLayout->addWidget( speedSlider, 0, 0, 1, 3 );
-    speedControlLayout->addWidget( slowerButton, 1, 0 );
-    speedControlLayout->addWidget( normalSpeedButton, 1, 1, 1, 1, Qt::AlignRight );
-    speedControlLayout->addWidget( fasterButton, 1, 2, 1, 1, Qt::AlignRight );
+    speedControlLayout->addWidget( customSpeedButton, 0, 0, 1, 3, Qt::AlignHCenter );
+    speedControlLayout->addWidget( speedSlider, 1, 0, 1, 3 );
+    speedControlLayout->addWidget( slowerButton, 2, 0, 1, 1, Qt::AlignLeft );
+    speedControlLayout->addWidget( normalSpeedButton, 2, 1, 1, 1, Qt::AlignHCenter );
+    speedControlLayout->addWidget( fasterButton, 2, 2, 1, 1, Qt::AlignRight );
+    speedControlLayout->setColumnStretch( 0, 1 );
+    speedControlLayout->setColumnStretch( 1, 1 );
+    speedControlLayout->setColumnStretch( 2, 1 );
     //speedControlLayout->addWidget( spinBox );
     speedControlLayout->setContentsMargins( 0, 0, 0, 0 );
     speedControlLayout->setSpacing( 0 );
@@ -821,6 +834,22 @@ void SpeedControlWidget::updateSpinBoxRate( double r )
 void SpeedControlWidget::resetRate()
 {
     THEMIM->getIM()->setRate( INPUT_RATE_DEFAULT );
+}
+
+void SpeedControlWidget::openCustomSpeedDialog()
+{
+    /* Close the parent speed control popup menu */
+    QWidget *w = parentWidget();
+    while( w )
+    {
+        if( QMenu *menu = qobject_cast<QMenu*>( w ) )
+        {
+            menu->close();
+            break;
+        }
+        w = w->parentWidget();
+    }
+    CustomSpeedDialog::getInstance( p_intf )->toggleVisible();
 }
 
 CoverArtLabel::CoverArtLabel( QWidget *parent, intf_thread_t *_p_i )

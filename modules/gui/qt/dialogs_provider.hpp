@@ -148,6 +148,7 @@ public slots:
     void toolbarDialog();
     void pluginDialog();
     void epgDialog();
+    void customSpeedDialog();
     void setPopupMenu();
     void destroyPopupMenu();
 
